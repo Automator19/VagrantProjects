@@ -1,0 +1,7 @@
+---
+- name: Launch EC2(s)
+  hosts: ec2
+  connection: local
+  gather_facts: no
+  roles:
+    - ec2_deploy

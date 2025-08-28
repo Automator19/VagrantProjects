@@ -1,0 +1,10 @@
+- name: Ensure limits.d files exist
+  ansible.builtin.template:
+    src: limits.conf.j2
+    dest: "/etc/security/limits.d/{{ item.filename }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop: "{{ limits_files }}"
+
+

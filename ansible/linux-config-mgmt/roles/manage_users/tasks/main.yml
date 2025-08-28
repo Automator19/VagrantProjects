@@ -1,0 +1,13 @@
+---
+- name: Ensure users are present
+  user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid | default(omit) }}"
+    groups: "{{ item.groups | join(',') if item.groups is defined else omit }}"
+    shell: "{{ item.shell | default('/bin/bash') }}"
+    comment: "{{ item.comment | default(omit) }}"
+    home: "{{ item.home | default(omit) }}"
+    state: present
+    create_home: yes
+  loop: "{{ os_users }}"
+

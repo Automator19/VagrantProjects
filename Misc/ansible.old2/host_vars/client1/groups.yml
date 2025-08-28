@@ -1,0 +1,15 @@
+users_groups:
+  - name: oinstall
+    gid: 4201
+  - name: dba
+    gid: 4000
+  - name: dba_group
+    gid: 4202
+  - name: app_group
+    gid: 4203
+  - name: dev_group
+    gid: 4204
+  - name: oracle_group
+    gid: 4205
+  - name: uc4prd
+    gid: 50017

@@ -1,0 +1,84 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  # Define all nodes configuration
+  nodes = [
+    { name: "client1", box: "centos/7", ip: "192.168.56.11", memory: 1024, cpus: 1 },
+    { name: "client2", box: "almalinux/9", ip: "192.168.56.12", memory: 1024, cpus: 1 },
+    { name: "ansible-control", box: "almalinux/9", ip: "192.168.56.10", memory: 2048, cpus: 2 }
+  ]
+
+  #-----------All Nodes Creation-------------
+  nodes.each do |node|
+    config.vm.define node[:name] do |machine|
+      machine.vm.box = node[:box]
+      machine.vm.hostname = node[:name]
+      machine.vm.network "private_network", ip: node[:ip]
+      
+      # Add synced folder for ansible files (only for control node)
+      if node[:name] == "ansible-control"
+        machine.vm.synced_folder "./ec2deploy", "/home/vagrant/ansible", 
+          owner: "vagrant", group: "vagrant", mount_options: ["dmode=755,fmode=644"]
+      end
+      
+      # Configure VirtualBox provider
+      machine.vm.provider "virtualbox" do |vb|
+        vb.memory = node[:memory]
+        vb.cpus = node[:cpus]
+        vb.name = node[:name]
+      end
+      
+      # Simple provisioning script
+      machine.vm.provision "shell", inline: <<-SHELL
+        echo "Provisioning #{node[:name]}..."
+        
+        # Update /etc/hosts for all nodes
+        echo "192.168.56.10 ansible-control" | sudo tee -a /etc/hosts
+        echo "192.168.56.11 client1" | sudo tee -a /etc/hosts
+        echo "192.168.56.12 client2" | sudo tee -a /etc/hosts
+        
+        # Node-specific setup
+        if [ "$(hostname)" = "ansible-control" ]; then
+          echo "Setting up Ansible control node..."
+          sudo dnf install -y epel-release
+          sudo dnf install -y ansible python3-pip wget curl nano
+          ansible --version
+          
+          # Create SSH key setup script
+          cat > /home/vagrant/setup-ssh-keys.sh << 'EOF'
+#!/bin/bash
+echo "Setting up SSH keys..."
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+
+# Copy SSH keys from vagrant directory
+for i in 1 2; do
+  key_path="/vagrant/.vagrant/machines/client${i}/virtualbox/private_key"
+  if [ -f "$key_path" ]; then
+    cp "$key_path" ~/.ssh/client${i}_key
+    chmod 600 ~/.ssh/client${i}_key
+    echo "Copied key for client${i}"
+  fi
+done
+
+# Create unified key for ansible inventory
+if [ -f ~/.ssh/client1_key ]; then
+  cp ~/.ssh/client1_key ~/.ssh/client_key
+  chmod 600 ~/.ssh/client_key
+  echo "Created unified client_key"
+fi
+
+echo "SSH keys setup complete!"
+EOF
+          
+          chmod +x /home/vagrant/setup-ssh-keys.sh
+          chown vagrant:vagrant /home/vagrant/setup-ssh-keys.sh
+          echo "Control node ready. Run './setup-ssh-keys.sh' after all VMs are up"
+        fi
+        
+        echo "#{node[:name]} provisioned"
+      SHELL
+    end
+  end
+end

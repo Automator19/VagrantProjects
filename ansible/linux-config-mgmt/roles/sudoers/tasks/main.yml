@@ -1,0 +1,29 @@
+---
+- name: Ensure sudo package is installed
+  package:
+    name: sudo
+    state: present
+
+- name: Ensure /etc/sudoers.d exists
+  file:
+    path: /etc/sudoers.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create sudoers files for groups
+  copy:
+    dest: "/etc/sudoers.d/{{ item.name }}"
+    content: |
+      # Sudoers rules for group '{{ item.name }}'
+
+      Runas_Alias RUNAS_{{ item.name | upper }}_1 = {{ item.runas }}
+      Cmnd_Alias CMD_{{ item.name | upper }}_1 = {{ item.commands }}
+
+      %{{ item.name }} ALL=(RUNAS_{{ item.name | upper }}_1) NOPASSWD: CMD_{{ item.name | upper }}_1
+    owner: root
+    group: root
+    mode: '0440'
+    validate: 'visudo -cf %s'
+  loop: "{{ sudoers_groups }}"

@@ -1,0 +1,6 @@
+﻿packages_list:
+  - vim
+  - wget
+  - net-tools
+  - lsof
+  - curl

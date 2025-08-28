@@ -1,0 +1,23 @@
+---
+- name: Ensure user groups exists
+  ansible.builtin.group:
+    gid: "{{ item.gid | d(omit) }}"
+    name: "{{ item.name }}"
+    state: present
+    system: "{{ user.system | d(omit) }}"
+  loop: "{{ users_groups }}"
+  tags: groups
+
+- name: Ensure users exist
+  ansible.builtin.user:
+    append: "{{ item.append | d(omit) }}"
+    comment: "{{ item.name | d(omit) }}"
+    create_home: "{{ item.create_home | d(omit) }}"
+    group: "{{ item.group | d(omit) }}"
+    groups: "{{ item.groups | d(omit) }}"
+    home: "{{ item.home | d(omit) }}"
+    name: "{{ item.name }}"
+    system: "{{ item.system | d(omit) }}"
+    uid: "{{ item.uid | d(omit) }}"
+  loop: "{{ users_users }}"
+  tags: users

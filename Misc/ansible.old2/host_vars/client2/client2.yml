@@ -1,0 +1,10 @@
+users_groups:
+  - name: group2
+    gid: 44
+    system: true
+
+users_users:
+  - name: user2
+    group: group2
+    create_home: true
+    home: /home/user2

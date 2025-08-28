@@ -1,0 +1,44 @@
+---
+- name: Install LVM package
+  package:
+    name: lvm2
+    state: present
+
+- name: Ensure volume group exists
+  community.general.lvg:
+    pvs: "{{ lvm_pvs }}"
+    vg: "{{ lvm_vg }}"
+    state: present
+    force: yes
+
+- name: Create logical volumes
+  community.general.lvol:
+    vg: "{{ lvm_vg }}"
+    lv: "{{ item.lv }}"
+    size: "{{ item.size }}"
+    force: yes
+  loop: "{{ lvm_volumes }}"
+
+- name: Create filesystem on logical volumes
+  filesystem:
+    fstype: "{{ item.fstype | default(lvm_fstype) }}"
+    dev: "/dev/{{ lvm_vg }}/{{ item.lv }}"
+  loop: "{{ lvm_volumes }}"
+
+- name: Create mount directories for logical volumes
+  file:
+    path: "{{ item.mount }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop: "{{ lvm_volumes }}"
+
+- name: Mount logical volumes and persist in fstab
+  mount:
+    path: "{{ item.mount }}"
+    src: "/dev/{{ lvm_vg }}/{{ item.lv }}"
+    fstype: "{{ item.fstype | default(lvm_fstype) }}"
+    opts: defaults,nofail
+    state: mounted
+  loop: "{{ lvm_volumes }}"

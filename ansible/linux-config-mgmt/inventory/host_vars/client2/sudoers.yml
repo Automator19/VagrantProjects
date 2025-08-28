@@ -1,0 +1,21 @@
+﻿sudoers_groups:
+  - name: admin_group
+    runas: ALL
+    commands: ALL
+
+  - name: app_group
+    runas: uc4prd
+    commands: ALL
+
+  - name: dba_group
+    runas: oracle
+    commands: ALL
+
+  - name: dev_group
+    runas: "vmpromo, stdprd, dwhprd, stgprd, dslprd, mprdwhprd, mprstgprd, rwsprd"
+    commands: ALL
+
+  - name: oracle_group
+    runas: "stgprd, mprstgprd"
+    commands: ALL
+

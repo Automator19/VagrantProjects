@@ -1,0 +1,13 @@
+---
+name: lmprpd07
+region: eu-west-1
+subnet_id: subnet-xxxxxxxx
+instance_type: t3.medium
+ami_id: ami-0123456789abcdef0     # <- put a real AMI ID here
+key_name: my-keypair               # optional
+security_group_ids: [sg-0123abcd]  # optional
+instance_profile_name: EC2StandardRole  # optional
+tags:
+  team: home
+  application: test
+  function: database

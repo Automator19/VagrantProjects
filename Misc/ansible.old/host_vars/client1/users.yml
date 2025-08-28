@@ -1,0 +1,116 @@
+users_users:
+  - name: oracle
+    uid: 4200
+    group: oinstall
+    groups: dba
+    home: /apps/software/oracle
+    shell: /bin/bash
+    comment: "sftp remote access only (ssh key-based)"
+    create_home: no
+
+  - name: stdprd
+    uid: 50015
+    home: /apps/projects/std/prd
+    shell: /bin/bash
+    comment: "no remote access"
+    create_home: yes
+
+  - name: mprdwhprd
+    uid: 50020
+    home: /apps/projects/mprdwh/prd
+    shell: /bin/bash
+    comment: "no remote access"
+    create_home: no
+
+  - name: mprstgprd
+    uid: 50021
+    home: /apps/projects/mprstg/prd
+    shell: /bin/bash
+    comment: "sftp remote access only (ssh key-based)"
+    create_home: no
+
+  - name: vmpromo
+    uid: 50018
+    groups: stdprd,mprstgprd,mprdwhprd
+    home: /home/dev/vmpromo
+    shell: /bin/bash
+    comment: "remote access sftp-ssh key-based"
+    create_home: no
+
+  - name: itag1
+    groups: dev_group
+    home: /home/dev/itag1
+    shell: /bin/bash
+    comment: "Anuj Ghai"
+    create_home: yes
+
+  - name: itdm
+    groups: dev_group
+    home: /home/dev/itdm
+    shell: /bin/bash
+    comment: "Duncan Mummery"
+    create_home: yes
+
+  - name: itat4
+    groups: dev_group
+    home: /home/dev/itat4
+    shell: /bin/bash
+    comment: "Arsen Tavitov"
+    create_home: yes
+
+  - name: itkl
+    groups: dev_group
+    home: /home/dev/itkl
+    shell: /bin/bash
+    comment: "Kevin Lemonius"
+    create_home: yes
+
+  - name: itms1
+    groups: dba_group,app_group,dev_group
+    home: /home/dev/itth
+    shell: /bin/bash
+    comment: "Max Shilo"
+    create_home: yes
+
+  - name: itia1
+    groups: dba_group,app_group,dev_group
+    home: /home/dev/itia1
+    shell: /bin/bash
+    comment: "Imran Ayaz"
+    create_home: yes
+
+  - name: itmb
+    groups: dba_group,app_group,dev_group
+    home: /home/dev/itmb
+    shell: /bin/bash
+    comment: "Mark Burton"
+    create_home: yes
+
+  - name: itsd3
+    groups: dba_group,app_group,dev_group
+    home: /home/dev/itsd3
+    shell: /bin/bash
+    comment: "Shayak Dey"
+    create_home: yes
+
+  - name: ittr
+    groups: dba_group,app_group,dev_group
+    home: /home/dev/ittr
+    shell: /bin/bash
+    comment: "Tariq Rouf"
+    create_home: yes
+
+  - name: itkc
+    groups: dba_group,app_group,dev_group
+    home: /home/dev/itkc
+    shell: /bin/bash
+    comment: "Kawah Cheung"
+    create_home: yes
+
+  - name: uc4prd
+    uid: 50016
+    group: 50017
+    home: /apps/projects/uc4/prd
+    shell: /bin/bash
+    comment: "stdprd"
+    create_home: yes

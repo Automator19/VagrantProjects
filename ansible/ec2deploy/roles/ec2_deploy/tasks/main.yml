@@ -1,0 +1,40 @@
+---
+# Keep it simple: require ami_id (no AMI lookup)
+- name: Assert required vars
+  ansible.builtin.assert:
+    that:
+      - name is defined
+      - region is defined
+      - subnet_id is defined
+      - instance_type is defined
+      - ami_id is defined
+    fail_msg: "Set name, region, subnet_id, instance_type, ami_id in host_vars."
+
+- name: Launch EC2
+  amazon.aws.ec2_instance:
+    name: "{{ name }}"
+    region: "{{ region }}"
+    image_id: "{{ ami_id }}"
+    instance_type: "{{ instance_type }}"
+    subnet_id: "{{ subnet_id }}"
+    key_name: "{{ key_name | default(omit) }}"
+    security_group_ids: "{{ security_group_ids | default(omit) }}"
+    iam_instance_profile: "{{ instance_profile_name | default(omit) }}"
+    network:
+      assign_public_ip: "{{ assign_public_ip }}"
+    wait: true
+    tags: "{{ tags | combine({'Name': name}) }}"
+    volumes:
+      - device_name: /dev/xvda
+        ebs:
+          volume_type: gp3
+          volume_size: 10
+          delete_on_termination: true
+  register: ec2_out
+
+- name: Show instance details
+  ansible.builtin.debug:
+    msg:
+      id: "{{ ec2_out.instances[0].instance_id }}"
+      private_ip: "{{ ec2_out.instances[0].private_ip_address | default('') }}"
+      state: "{{ ec2_out.instances[0].state.name | default('') }}"

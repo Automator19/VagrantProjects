@@ -1,0 +1,7 @@
+﻿os_groups:
+  - name: devops
+    gid: 2001
+
+  - name: webadmins
+    gid: 2002
+

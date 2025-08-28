@@ -1,0 +1,6 @@
+all:
+  children:
+    ec2:
+      hosts:
+        lmprpd07: {}
+         

@@ -1,0 +1,10 @@
+# Managed by Ansible
+# Custom sysctl parameters for {{ inventory_hostname }}
+
+{% for param in sysctl_params %}
+{% if param.comment is defined %}
+# {{ param.comment }}
+{% endif %}
+{{ param.name }} = {{ param.value }}
+
+{% endfor %}

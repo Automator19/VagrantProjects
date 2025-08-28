@@ -1,0 +1,46 @@
+﻿sysctl_params:
+  - name: net.ipv6.conf.all.disable_ipv6
+    value: 1
+    comment: "Disable IPv6 globally"
+  - name: net.ipv6.conf.default.disable_ipv6
+    value: 1
+    comment: "Disable IPv6 on default interface"
+  - name: kernel.msgmnb
+    value: 65536
+    comment: "Controls the default maximum size of a message queue"
+  - name: kernel.sem
+    value: "250 32000 100 128"
+    comment: "Kernel semaphore limits"
+  - name: kernel.shmmni
+    value: 4096
+    comment: "Kernel shared memory identifiers"
+  - name: kernel.shmmax
+    value: 152259518463
+    comment: "Maximum shared memory segment size"
+  - name: kernel.shmall
+    value: 4294967296
+    comment: "Total shared memory pages"
+  - name: fs.file-max
+    value: 6815744
+    comment: "Maximum number of file descriptors"
+  - name: net.ipv4.ip_local_port_range
+    value: "9000 65500"
+    comment: "Local port range"
+  - name: net.core.rmem_default
+    value: 262144
+    comment: "Default receive buffer size"
+  - name: net.core.wmem_default
+    value: 262144
+    comment: "Default send buffer size"
+  - name: net.core.rmem_max
+    value: 4194304
+    comment: "Maximum receive buffer size"
+  - name: net.core.wmem_max
+    value: 1048576
+    comment: "Maximum send buffer size"
+  - name: fs.aio-max-nr
+    value: 1048576
+    comment: "Maximum number of asynchronous I/O requests"
+  - name: vm.nr_hugepages
+    value: 24000
+    comment: "Number of hugepages"

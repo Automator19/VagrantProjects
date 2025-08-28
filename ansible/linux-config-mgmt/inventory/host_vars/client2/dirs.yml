@@ -1,0 +1,12 @@
+﻿
+extra_dirs:
+  - path: /tmp/test
+    owner: root
+    group: root
+    mode: '0755'
+
+  - path: /tmp/test2
+    owner: root
+    group: root
+    mode: '0775'
+    

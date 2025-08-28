@@ -1,0 +1,11 @@
+- name: Deploy sysctl configuration file
+  ansible.builtin.template:
+    src: sysctl.conf.j2
+    dest: /etc/sysctl.d/99-sysctl.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Reload sysctl to apply changes
+  ansible.builtin.command: sysctl --system
+

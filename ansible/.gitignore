@@ -1,0 +1,18 @@
+# Ignore Vagrant's local VM state
+.vagrant/
+
+# Ignore any local provisioning logs
+*.log
+
+# Ignore any box files you might have downloaded
+*.box
+
+# Ignore editor-specific files
+*.swp
+*~
+.vscode/
+.idea/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db

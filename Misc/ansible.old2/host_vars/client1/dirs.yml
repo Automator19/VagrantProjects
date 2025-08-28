@@ -1,0 +1,25 @@
+client_dirs:
+  - path: "/apps"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+  - path: "/apps/projects"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+  - path: "/apps/projects/std/prd"
+    owner: "stdprd"
+    group: "stdprd"
+    mode: "0755"
+
+  - path: "/apps/software"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+  - path: "/apps/software/oracle"
+    owner: "oracle"
+    group: "oinstall"
+    mode: "0755"

@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: boutetnico.users
+
+      users_groups:
+        - name: group1
+          gid: 1234
+          system: true
+
+      users_users:
+        - name: user1
+          group: group1
+          create_home: true
+          home: /home/user1

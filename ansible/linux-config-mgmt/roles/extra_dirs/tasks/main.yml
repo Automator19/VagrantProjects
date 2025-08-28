@@ -1,0 +1,10 @@
+---
+- name: Create extra directories
+  file:
+    path: "{{ item.path }}"
+#   state: "{{ item.state | default('directory') }}" # This line will remote the dir if state is absent, careful with this!
+    state: directory # This will only create the directory if it does not exist, not remove it.
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0755') }}"
+  loop: "{{ extra_dirs }}"

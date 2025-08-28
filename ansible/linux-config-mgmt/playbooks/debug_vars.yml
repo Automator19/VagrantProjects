@@ -1,0 +1,27 @@
+---
+- hosts: client2
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Show all host variables
+      debug:
+        var: hostvars[inventory_hostname]
+    
+    - name: Test lvm_pvs variable directly
+      debug:
+        var: lvm_pvs
+    
+    - name: Test all lvm variables
+      debug:
+        msg:
+          - "lvm_pvs: {{ lvm_pvs | default('UNDEFINED') }}"
+          - "lvm_vg: {{ lvm_vg | default('UNDEFINED') }}"
+          - "lvm_fstype: {{ lvm_fstype | default('UNDEFINED') }}"
+          - "lvm_volumes: {{ lvm_volumes | default('UNDEFINED') }}"
+    
+    - name: Show where we're looking for variables
+      debug:
+        msg:
+          - "Playbook dir: {{ playbook_dir }}"
+          - "Current working directory: {{ ansible_env.PWD }}"
+          - "Inventory dir: {{ inventory_dir | default('Not defined') }}"

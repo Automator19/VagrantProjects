@@ -1,0 +1,8 @@
+---
+lvm_pvs:
+  - /dev/sdb
+lvm_vg: vgapps
+lvm_fstype: xfs
+lvm_volumes:
+  - { lv: lvbo42, size: 1G, mount: /apps/software }
+  - { lv: lvuc4, size: 1G, mount: /apps/projects/uc4 }

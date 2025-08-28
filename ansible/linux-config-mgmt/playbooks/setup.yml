@@ -1,0 +1,20 @@
+﻿---
+- hosts: app_servers
+  become: yes
+  roles:
+    - role: lvm_setup
+      tags: lvm_setup
+    - role: extra_dirs
+      tags: extra_dirs
+    - role: manage_groups
+      tags: manage_groups
+    - role: manage_users
+      tags: manage_users
+    - role: sudoers
+      tags: sudoers
+    - role: sysctl
+      tags: sysctl
+    - role: limits
+      tags: limits
+    - role: packages
+      tags: packages

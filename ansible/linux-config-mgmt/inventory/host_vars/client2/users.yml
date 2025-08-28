@@ -1,0 +1,14 @@
+﻿os_users:
+  - name: alice
+    uid: 1001
+    groups: ["devops","webadmins"]
+    comment: "User Alice, part of devops and webadmins groups"
+    home: /home/alice
+    shell: /bin/bash
+
+  - name: bob
+    uid: 1002
+    groups: ["webadmins"]
+    comment: "User Bob, part of webadmins group"
+    home: /home/bob
+    shell: /bin/bash

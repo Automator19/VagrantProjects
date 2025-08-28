@@ -1,0 +1,7 @@
+---
+- name: Ensure groups are present
+  group:
+    name: "{{ item.name }}"
+    gid: "{{ item.gid | default(omit) }}"
+    state: present
+  loop: "{{ os_groups }}"

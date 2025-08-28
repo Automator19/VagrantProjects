@@ -1,0 +1,10 @@
+- name: Ensure directories exist
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  loop: "{{ client_dirs }}"
+  tags: dir_creation
+  

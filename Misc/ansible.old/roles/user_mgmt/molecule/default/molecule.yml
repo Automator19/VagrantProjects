@@ -1,0 +1,23 @@
+---
+dependency:
+  name: galaxy
+  enabled: false
+
+driver:
+  name: docker
+
+platforms:
+  - name: ansible-role-users-debian-11
+    image: debian:11
+  - name: ansible-role-users-debian-12
+    image: debian:12
+  - name: ansible-role-users-ubuntu-2204
+    image: ubuntu:22.04
+  - name: ansible-role-users-ubuntu-2404
+    image: ubuntu:24.04
+
+provisioner:
+  name: ansible
+
+verifier:
+  name: testinfra
