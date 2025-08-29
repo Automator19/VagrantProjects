@@ -3,4 +3,12 @@ all:
     ec2:
       hosts:
         lmprpd07: {}
-         
+        test01: {}
+        lboxua91: {}
+    cloudops_staging:
+      hosts:
+        lboxua91: {}
+    aws_jpx:
+      hosts:
+        lmprpd07: {}
+        test01: {}

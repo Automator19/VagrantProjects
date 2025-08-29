@@ -1,0 +1,27 @@
+name: lboxua91
+region: eu-west-1
+instance_profile_name: EC2StandardRole
+instance_type: r6g.large
+ami_id: ami-026796923177ef35f
+subnet_id: subnet-03781a814b7388835
+security_group_ids:
+  - sg-036a7e053c70728a6
+termination_protection: true
+key_name: cloudops-staging-master
+root_device_name: /dev/sda1
+root_block_device:
+  delete_on_termination: true
+  volume_type: gp3
+  volume_size: 150
+  encrypted: false
+ebs_block_device:
+  xvdbb:
+    delete_on_termination: true
+    volume_type: gp3
+    volume_size: 150
+    encrypted: false
+tags:
+  team: "coreinfra & dba"
+  application: "bo"
+  function: application
+  environment: uat

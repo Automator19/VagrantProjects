@@ -1,5 +1,5 @@
 ---
-# Keep it simple: require ami_id (no AMI lookup)
+# 1) Guardrails
 - name: Assert required vars
   ansible.builtin.assert:
     that:
@@ -8,33 +8,77 @@
       - subnet_id is defined
       - instance_type is defined
       - ami_id is defined
-    fail_msg: "Set name, region, subnet_id, instance_type, ami_id in host_vars."
+      - subnet_id is match("subnet-[0-9a-f]+")
+      - ami_id is match("ami-[0-9a-f]+")
+      - (security_group_ids is not defined) or (security_group_ids | type_debug == 'list')
+    fail_msg: "Set name, region, subnet_id, instance_type, ami_id (and optional security_group_ids list) in host_vars."
 
-- name: Launch EC2
+# 2) Defaults
+- name: Defaults for convenience
+  ansible.builtin.set_fact:
+    _wait_timeout: "{{ wait_timeout | default(600) }}"
+    _tags: "{{ (tags | default({})) | combine({'Name': name}) }}"
+    _root_device_name: "{{ root_device_name | default('/dev/xvda') }}"
+
+# 3) Build root volume mapping (configurable device name)
+- name: Build root volume (from root_block_device)
+  ansible.builtin.set_fact:
+    _root_vol:
+      device_name: "{{ _root_device_name }}"
+      ebs:
+        volume_type: "{{ root_block_device.volume_type | default('gp3') }}"
+        volume_size: "{{ root_block_device.volume_size | default(10) }}"
+        delete_on_termination: "{{ root_block_device.delete_on_termination | default(true) }}"
+        encrypted: "{{ root_block_device.encrypted | default(false) }}"
+
+# 4) Extra EBS volumes from ebs_block_device dict
+- name: Init extra volumes list
+  ansible.builtin.set_fact:
+    _extra_vols: []
+
+- name: Append extra data volumes
+  ansible.builtin.set_fact:
+    _extra_vols: >-
+      {{ _extra_vols + [ {
+          'device_name': '/dev/' + item.key,
+          'ebs': {
+            'volume_type': item.value.volume_type | default('gp3'),
+            'volume_size': item.value.volume_size | default(10),
+            'delete_on_termination': item.value.delete_on_termination | default(true),
+            'encrypted': item.value.encrypted | default(false)
+          }
+        } ] }}
+  when: ebs_block_device is defined
+  loop: "{{ (ebs_block_device | default({})) | dict2items }}"
+
+- name: Combine all volumes
+  ansible.builtin.set_fact:
+    _all_vols: "{{ [_root_vol] + _extra_vols }}"
+
+# 5) Launch EC2 (private IP only)
+- name: Launch EC2 instance
   amazon.aws.ec2_instance:
     name: "{{ name }}"
     region: "{{ region }}"
     image_id: "{{ ami_id }}"
+    profile: "{{ aws_profile | default(omit) }}"
     instance_type: "{{ instance_type }}"
     subnet_id: "{{ subnet_id }}"
     key_name: "{{ key_name | default(omit) }}"
-    security_group_ids: "{{ security_group_ids | default(omit) }}"
+    termination_protection: "{{ enable_termination_protection | default(true) }}"
+    security_groups: "{{ security_group_ids | default(omit) }}"
     iam_instance_profile: "{{ instance_profile_name | default(omit) }}"
-    network:
-      assign_public_ip: "{{ assign_public_ip }}"
+    tags: "{{ _tags }}"
     wait: true
-    tags: "{{ tags | combine({'Name': name}) }}"
-    volumes:
-      - device_name: /dev/xvda
-        ebs:
-          volume_type: gp3
-          volume_size: 10
-          delete_on_termination: true
+    wait_timeout: "{{ _wait_timeout }}"
+    volumes: "{{ _all_vols }}"
   register: ec2_out
 
+# 6) Output essentials
 - name: Show instance details
   ansible.builtin.debug:
     msg:
-      id: "{{ ec2_out.instances[0].instance_id }}"
+      id: "{{ ec2_out.instances[0].instance_id | default('') }}"
+      az: "{{ ec2_out.instances[0].placement.availability_zone | default('') }}"
       private_ip: "{{ ec2_out.instances[0].private_ip_address | default('') }}"
       state: "{{ ec2_out.instances[0].state.name | default('') }}"
